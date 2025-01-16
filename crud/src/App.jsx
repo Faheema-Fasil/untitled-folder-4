@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { AddPosts } from './Services/allAPI';
-
+import { getPosts } from './Services/allAPI';
 function App() {
   const [show, setShow] = useState(false);
 const [postDetails, setPostDetails] = useState({
@@ -10,6 +10,17 @@ const [postDetails, setPostDetails] = useState({
     description: "",
     image: "",
 })
+const Delete=async(id)=>{
+  const response=await getPosts(id)
+  console.log(response)
+}
+const Edit=async(id)=>{
+  const response=await getPosts(id)
+  console.log(response)
+  setPostDetails(response)
+  handleShow()
+}
+const[post,setPost]=useState([])
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 const addPosts=async(e)=>{
@@ -21,9 +32,19 @@ const {title,description,image}=postDetails
     handleClose()
     
 }
+const getPOsts=async()=>{
+  const response=await getPosts()
+  console.log(response)
+  setPost(response)
+}
+useEffect(() => {
+  console.log(postDetails)
+  getPOsts()
+}, [postDetails])
   return (
     <>
       <div style={{ textAlign: "center" }}>
+        
         <h1>hello</h1>
         <form action="">
           <input type="text" />
@@ -33,23 +54,29 @@ const {title,description,image}=postDetails
           </Button>
           
         </form>
-        <div style={{ display: "flex" }}>
-          <div style={{ border: "1px solid black", width: "300px" }}>
-            <h1 >title: abcd</h1>
-            <p>description: abcd</p>
-            <img
-              width="300px"
-              src="https://plus.unsplash.com/premium_photo-1664474619075-644dd191935f?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8aW1hZ2V8ZW58MHx8MHx8fDA%3D"
-              alt=""
-            />
-            <br />
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <button>edit</button>
-              <button>delete</button>
+        {post.length > 0 ? post.map((item) => (
+          <div key={item._id} style={{ display: "flex", marginBottom: "10px" }}>
+            <div style={{ border: "1px solid black", width: "300px", padding: "10px" }}>
+              <h1>Title: {item.title}</h1>
+              <p>Description: {item.description}</p>
+              <img
+                width="300px"
+                src={item.image}
+                alt={item.title}
+              />
+              <br />
+              <div style={{ display: "flex", justifyContent: "space-between", marginTop: "10px" }}>
+                <button onClick={() => Edit(item._id)}>Edit</button>
+                <button onClick={() => Delete(item._id)}>Delete</button>
+              </div>
             </div>
           </div>
-        </div>
+        )) : (
+          <h1>No data available</h1>
+        )}
       </div>
+       
+
       <style>
         {`
           .modal-top-middle .modal-dialog {

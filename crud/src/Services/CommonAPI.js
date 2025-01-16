@@ -1,9 +1,9 @@
 import axios from 'axios';
-import { server_URL } from './serverurl';
-export const CommonAPI=async(httpRequest,url,reqBody,reqHeader)=>{
+
+export const CommonAPI=async(httpRequest,URL,reqBody,reqHeader)=>{
     const reqConfig={
         method:httpRequest,
-        url:`${server_URL}`,
+        url:URL,
         data:reqBody,
         headers:reqHeader  || {
             'Content-Type': 'application/json'
